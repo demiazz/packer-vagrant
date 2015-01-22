@@ -60,7 +60,7 @@
   ],
   "post-processors": [
     {
-      "output": "../builds/{{.Provider}}/opscode_ubuntu-14.10_chef-{{user `chef_version`}}.box",
+      "output": "builds/ubuntu-14.10-chef-{{user `chef_version`}}.box",
       "type": "vagrant"
     }
   ],
