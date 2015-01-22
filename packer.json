@@ -1,7 +1,7 @@
 {
-  builders: [
+  "builders": [
     {
-      boot_command: [
+      "boot_command": [
         "<esc><wait>",
         "<esc><wait>",
         "<enter><wait>",
@@ -25,22 +25,22 @@
         " -- <wait>",
         "<enter><wait>"
       ],
-      boot_wait: "10s",
-      disk_size: 40960,
-      parallels_tools_flavor: "lin",
-      guest_os_type: "ubuntu",
-      http_directory: "http",
-      iso_checksum: "0c1ebea31c3523cfe9a4ffed8bcf6c7d23dfb97b",
-      iso_checksum_type: "sha1",
-      iso_url: "{{user `mirror`}}/14.10/ubuntu-14.10-server-amd64.iso",
-      output_directory: "packer-ubuntu-14.10-amd64-parallels",
-      shutdown_command: "echo 'vagrant'|sudo -S shutdown -P now",
-      ssh_password: "vagrant",
-      ssh_port: 22,
-      ssh_username: "vagrant",
-      ssh_wait_timeout: "10000s",
-      type: "parallels-iso",
-      prlctl: [
+      "boot_wait": "10s",
+      "disk_size": 40960,
+      "parallels_tools_flavor": "lin",
+      "guest_os_type": "ubuntu",
+      "http_directory": "http",
+      "iso_checksum": "0c1ebea31c3523cfe9a4ffed8bcf6c7d23dfb97b",
+      "iso_checksum_type": "sha1",
+      "iso_url": "{{user `mirror`}}/14.10/ubuntu-14.10-server-amd64.iso",
+      "output_directory": "packer-ubuntu-14.10-amd64-parallels",
+      "shutdown_command": "echo 'vagrant'|sudo -S shutdown -P now",
+      "ssh_password": "vagrant",
+      "ssh_port": 22,
+      "ssh_username": "vagrant",
+      "ssh_wait_timeout": "10000s",
+      "type": "parallels-iso",
+      "prlctl": [
         [
           "set",
           "{{.Name}}",
@@ -54,23 +54,23 @@
           "1"
         ]
       ],
-      prlctl_version_file: ".prlctl_version",
-      vm_name: "packer-ubuntu-14.10-amd64"
+      "prlctl_version_file": ".prlctl_version",
+      "vm_name": "packer-ubuntu-14.10-amd64"
     }
   ],
-  post-processors: [
+  "post-processors": [
     {
-      output: "../builds/{{.Provider}}/opscode_ubuntu-14.10_chef-{{user `chef_version`}}.box",
-      type: "vagrant"
+      "output": "../builds/{{.Provider}}/opscode_ubuntu-14.10_chef-{{user `chef_version`}}.box",
+      "type": "vagrant"
     }
   ],
-  provisioners: [
+  "provisioners": [
     {
-      environment_vars: [
+      "environment_vars": [
         "CHEF_VERSION={{user `chef_version`}}"
       ],
-      execute_command: "echo 'vagrant'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
-      scripts: [
+      "execute_command": "echo 'vagrant'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
         "scripts/ubuntu/update.sh",
         "scripts/common/sshd.sh",
         "scripts/ubuntu/networking.sh",
@@ -81,11 +81,11 @@
         "scripts/ubuntu/cleanup.sh",
         "scripts/common/minimize.sh"
       ],
-      type: "shell"
+      "type": "shell"
     }
   ],
-  variables: {
-    chef_version: "provisionerless",
-    mirror: "http://releases.ubuntu.com"
+  "variables": {
+    "chef_version": "provisionerless",
+    "mirror": "http://releases.ubuntu.com"
   }
 }
