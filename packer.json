@@ -55,7 +55,7 @@
         ]
       ],
       "prlctl_version_file": ".prlctl_version",
-      "vm_name": "packer-ubuntu-14.10-amd64"
+      "vm_name": "ubuntu-14.10-amd64-chef-{{user `chef_version`}}"
     }
   ],
   "post-processors": [
