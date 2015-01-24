@@ -1,1 +1,9 @@
+bin/
+.bundle/
+iso
+*.box
+virtualfloppy.vfd
+packer_cache
+packer.log
 .DS_Store
+packer-ubuntu-*
