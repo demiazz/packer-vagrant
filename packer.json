@@ -45,30 +45,27 @@
           "set",
           "{{.Name}}",
           "--memsize",
-          "384"
+          "2048"
         ],
         [
           "set",
           "{{.Name}}",
           "--cpus",
-          "1"
+          "2"
         ]
       ],
       "prlctl_version_file": ".prlctl_version",
-      "vm_name": "ubuntu-14.10-amd64-chef-{{user `chef_version`}}"
+      "vm_name": "ubuntu-14.10-amd64"
     }
   ],
   "post-processors": [
     {
-      "output": "builds/ubuntu-14.10-chef-{{user `chef_version`}}.box",
+      "output": "builds/ubuntu-14.10.box",
       "type": "vagrant"
     }
   ],
   "provisioners": [
     {
-      "environment_vars": [
-        "CHEF_VERSION={{user `chef_version`}}"
-      ],
       "execute_command": "echo 'vagrant'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
       "scripts": [
         "scripts/update.sh",
@@ -77,7 +74,6 @@
         "scripts/sudoers.sh",
         "scripts/vagrant.sh",
         "scripts/vmtools.sh",
-        "scripts/chef.sh",
         "scripts/cleanup.sh",
         "scripts/minimize.sh"
       ],
@@ -85,7 +81,6 @@
     }
   ],
   "variables": {
-    "chef_version": "provisionerless",
     "mirror": "http://releases.ubuntu.com"
   }
 }

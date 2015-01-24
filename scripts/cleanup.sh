@@ -30,4 +30,3 @@ apt-get -y purge popularity-contest
 
 apt-get -y autoremove
 apt-get -y clean
-rm -f /tmp/chef*deb
