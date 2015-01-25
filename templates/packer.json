@@ -60,7 +60,7 @@
   ],
   "post-processors": [
     {
-      "output": "builds/ubuntu-14.10-server-amd64.box",
+      "output": "../../builds/ubuntu-14.10-server-amd64.box",
       "type": "vagrant"
     }
   ],
