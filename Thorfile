@@ -69,6 +69,7 @@ class Packer < Thor
   option :username, type: :string, default: 'vagrant'
   option :password, type: :string
   option :fullname, type: :string
+  option :hostname, type: :string, default: 'vagrant'
   def build
     opts = options.merge({})
 
