@@ -35,9 +35,9 @@
       "iso_url": "{{user `mirror`}}/14.10/ubuntu-14.10-server-amd64.iso",
       "output_directory": "packer-ubuntu-14.10-amd64-parallels",
       "shutdown_command": "echo 'vagrant'|sudo -S shutdown -P now",
+      "ssh_username": "vagrant",
       "ssh_password": "vagrant",
       "ssh_port": 22,
-      "ssh_username": "vagrant",
       "ssh_wait_timeout": "10000s",
       "type": "parallels-iso",
       "prlctl": [
