@@ -4,26 +4,22 @@ require 'ostruct'
 require 'thor'
 
 class Builder
-  ROOT_PATH = File.dirname(__FILE__)
-  TMP_PATH  = File.join(ROOT_PATH, 'tmp')
+  ROOT_PATH      = File.dirname(__FILE__)
+  TEMPLATES_PATH = File.join(ROOT_PATH, 'templates')
+  TMP_PATH       = File.join(ROOT_PATH, 'tmp')
 
   def initialize(options)
     @id      = SecureRandom.uuid
     @options = options
 
     create_tmp_dir
-    create_packer_json
-    create_preseed_cfg
+    create_files
     build_image
     remove_tmp_dir
   end
 
   def tmp_path
     File.join(TMP_PATH, @id)
-  end
-
-  def http_path
-    File.join(tmp_path, 'http')
   end
 
   def packer_path
@@ -42,21 +38,20 @@ class Builder
   def create_tmp_dir
     Dir.mkdir(TMP_PATH) unless File.directory?(TMP_PATH)
 
-    FileUtils.mkdir_p(http_path)
+    FileUtils.mkdir_p(tmp_path)
   end
 
-  def create_packer_json
-    source      = File.join(ROOT_PATH, 'templates/packer.json')
-    destination = File.join(tmp_path, 'packer.json')
+  def create_files
+    Dir.glob(File.join(TEMPLATES_PATH, '**/*')).each do |template_path|
+      if File.file?(template_path)
+        base_path = template_path.gsub(/\A#{ TEMPLATES_PATH }\//, '')
+        dest_path = File.join(tmp_path, base_path)
 
-    template(source, destination)
-  end
+        FileUtils.mkdir_p(File.dirname(dest_path))
 
-  def create_preseed_cfg
-    source      = File.join(ROOT_PATH, 'templates/preseed.cfg')
-    destination = File.join(http_path, 'preseed.cfg')
-
-    template(source, destination)
+        template(template_path, dest_path)
+      end
+    end
   end
 
   def build_image
