@@ -1,6 +1,7 @@
 require 'erb'
 require 'fileutils'
 require 'ostruct'
+require 'securerandom'
 require 'thor'
 
 class Builder
@@ -12,14 +13,19 @@ class Builder
     @id      = SecureRandom.uuid
     @options = options
 
+    generate_password
     configure_public_keys
     configure_private_keys
     create_tmp_dir
     create_keys_dir
     create_files
     link_packer_cache
-    build_image
-    remove_tmp_dir
+    # build_image
+    # remove_tmp_dir
+  end
+
+  def generate_password
+    @options[:password] = SecureRandom.urlsafe_base64(32)
   end
 
   def configure_public_keys
@@ -111,7 +117,6 @@ end
 class Packer < Thor
   desc 'build', 'Execute the packer builder'
   option :username,           type: :string, default: 'vagrant'
-  option :password,           type: :string
   option :fullname,           type: :string
   option :hostname,           type: :string, default: 'vagrant'
   option :vagrant_public_key, type: :string, default: ''
@@ -119,7 +124,6 @@ class Packer < Thor
   def build
     opts = options.merge({})
 
-    opts[:password] ||= opts[:username]
     opts[:fullname] ||= opts[:username]
 
     Builder.new(opts)
