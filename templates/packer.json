@@ -72,10 +72,52 @@
         "scripts/sshd.sh",
         "scripts/networking.sh",
         "scripts/sudoers.sh",
-        "scripts/vagrant.sh",
         "scripts/vmtools.sh",
         "scripts/cleanup.sh",
         "scripts/minimize.sh"
+      ],
+      "type": "shell"
+    },
+
+    {
+      "execute_command": "echo '<%= password %>'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "inline": [
+        "mkdir -p ~<%= username %>/.ssh",
+        "chown <%= username %> ~<%= username %>/.ssh"
+      ],
+      "type": "shell"
+    },
+
+    <% if use_official_public_key %>{
+      "execute_command": "echo '<%= password %>'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "inline": [
+        "wget --no-check-certificate 'https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub' -O ~<%= demiazz %>/.ssh/authorized_keys"
+      ],
+      "type": "shell"
+    },<% end %>
+
+    <% unless use_official_public_key %>{
+      "source": "<%= vagrant_public_key %>",
+      "destination": "~<%= demiazz %>/.ssh/authorized_keys",
+      "type": "file"
+    },<% end %>
+
+    <% private_keys.each do |key| %>{
+      "source": "<%= key[:private_key_path] %>",
+      "destination": "~<%= demiazz %>/.ssh/<%= key[:private_key_name] %>",
+      "type": "file"
+    },
+    {
+      "source": "<%= key[:public_key_path] %>",
+      "destination": "~<%= demiazz %>/.ssh/<%= key[:public_key_name] %>",
+      "type": "file"
+    },<% end %>
+
+    {
+      "execute_command": "echo '<%= password %>'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "inline": [
+        "chown -R <%= username %> ~<%= username %>/.ssh",
+        "chmod -R go-rwsx ~<%= username %>/.ssh"
       ],
       "type": "shell"
     }

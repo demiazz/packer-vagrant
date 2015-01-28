@@ -12,15 +12,50 @@ class Builder
     @id      = SecureRandom.uuid
     @options = options
 
+    configure_public_keys
+    configure_private_keys
     create_tmp_dir
+    create_keys_dir
     create_files
     link_packer_cache
     build_image
     remove_tmp_dir
   end
 
+  def configure_public_keys
+    unless @options[:vagrant_public_key].length > 0
+      @options[:use_official_public_key] = true
+
+      return
+    end
+
+    @options[:vagrant_public_key] = File.expand_path(
+      @options[:vagrant_public_key]
+    )
+  end
+
+  def configure_private_keys
+    @options[:private_keys].map! do |path|
+      private_key_path = File.expand_path(path)
+      private_key_name = File.basename(path)
+      public_key_path  = "#{ private_key_path }.pub"
+      public_key_name  = "#{ private_key_name }.pub"
+
+      {
+        private_key_path: private_key_path,
+        private_key_name: private_key_name,
+        public_key_path: public_key_path,
+        public_key_name: public_key_name
+      }
+    end
+  end
+
   def tmp_path
     File.join(TMP_PATH, @id)
+  end
+
+  def keys_path
+    File.join(tmp_path, 'keys')
   end
 
   def template(src_path, dest_path)
@@ -36,6 +71,10 @@ class Builder
     Dir.mkdir(TMP_PATH) unless File.directory?(TMP_PATH)
 
     FileUtils.mkdir_p(tmp_path)
+  end
+
+  def create_keys_dir
+    FileUtils.mkdir_p(keys_path)
   end
 
   def create_files
@@ -71,10 +110,12 @@ end
 
 class Packer < Thor
   desc 'build', 'Execute the packer builder'
-  option :username,    type: :string, default: 'vagrant'
-  option :password,    type: :string
-  option :fullname,    type: :string
-  option :hostname,    type: :string, default: 'vagrant'
+  option :username,           type: :string, default: 'vagrant'
+  option :password,           type: :string
+  option :fullname,           type: :string
+  option :hostname,           type: :string, default: 'vagrant'
+  option :vagrant_public_key, type: :string, default: ''
+  option :private_keys,       type: :array,  default: []
   def build
     opts = options.merge({})
 

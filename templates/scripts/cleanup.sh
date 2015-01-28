@@ -30,3 +30,7 @@ apt-get -y purge popularity-contest
 
 apt-get -y autoremove
 apt-get -y clean
+
+# delete keys tmp directory
+
+rm -rf ~<%= usename %>/.keys_tmp
