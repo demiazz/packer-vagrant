@@ -20,8 +20,8 @@ class Builder
     create_keys_dir
     create_files
     link_packer_cache
-    # build_image
-    # remove_tmp_dir
+    build_image
+    remove_tmp_dir
   end
 
   def generate_password
