@@ -117,15 +117,10 @@ end
 class Packer < Thor
   desc 'build', 'Execute the packer builder'
   option :username,           type: :string, default: 'vagrant'
-  option :fullname,           type: :string
   option :hostname,           type: :string, default: 'vagrant'
   option :vagrant_public_key, type: :string, default: ''
   option :private_keys,       type: :array,  default: []
   def build
-    opts = options.merge({})
-
-    opts[:fullname] ||= opts[:username]
-
-    Builder.new(opts)
+    Builder.new(options.merge({}))
   end
 end
