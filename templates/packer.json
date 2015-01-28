@@ -97,12 +97,12 @@
     },<% end %>
 
     <% unless use_official_public_key %>{
-      "source": "<%= vagrant_public_key %>",
+      "source": "<%= vagrant_key %>",
       "destination": "~<%= demiazz %>/.ssh/authorized_keys",
       "type": "file"
     },<% end %>
 
-    <% private_keys.each do |key| %>{
+    <% ssh_keys.each do |key| %>{
       "source": "<%= key[:private_key_path] %>",
       "destination": "~<%= demiazz %>/.ssh/<%= key[:private_key_name] %>",
       "type": "file"

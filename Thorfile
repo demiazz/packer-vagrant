@@ -29,19 +29,20 @@ class Builder
   end
 
   def configure_public_keys
-    unless @options[:vagrant_public_key].length > 0
+    unless @options[:vagrant_key].length > 0
       @options[:use_official_public_key] = true
 
       return
     end
 
-    @options[:vagrant_public_key] = File.expand_path(
-      @options[:vagrant_public_key]
-    )
+    key = @options[:vagrant_key]
+    key = "#{ key }.pub" unless File.extname(key) == '.pub'
+
+    @options[:vagrant_key] = File.expand_path(key)
   end
 
   def configure_private_keys
-    @options[:private_keys].map! do |path|
+    @options[:ssh_keys].map! do |path|
       private_key_path = File.expand_path(path)
       private_key_name = File.basename(path)
       public_key_path  = "#{ private_key_path }.pub"
@@ -116,11 +117,16 @@ end
 
 class Packer < Thor
   desc 'build', 'Execute the packer builder'
-  option :username,           type: :string, default: 'vagrant'
-  option :hostname,           type: :string, default: 'vagrant'
-  option :vagrant_public_key, type: :string, default: ''
-  option :private_keys,       type: :array,  default: []
+  option :username,      type: :string, default: 'vagrant'
+  option :hostname,      type: :string, default: 'vagrant'
+  option :'vagrant-key', type: :string, default: ''
+  option :'ssh-keys',    type: :array,  default: []
   def build
-    Builder.new(options.merge({}))
+    opts = options.merge({})
+
+    opts[:vagrant_key] = opts.delete(:'vagrant-key')
+    opts[:ssh_keys]    = opts.delete(:'ssh-keys')
+
+    Builder.new(opts)
   end
 end
